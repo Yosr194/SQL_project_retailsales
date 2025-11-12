@@ -2086,33 +2086,49 @@ OR quantity = 0
 OR price_per_unit = 0
 OR cogs = 0
 OR total_sale = 0;
+-- 7. cleaning dataset: deleting rows with potentially missing or zero values
+
+
+DELETE FROM `retail_sales`
+WHERE transactions_id = 0
+OR sale_date IS NULL
+OR sale_time IS NULL
+OR customer_id = 0
+OR gender IS NULL
+OR age IS NULL
+OR category IS NULL
+OR quantity = 0
+OR price_per_unit = 0
+OR cogs = 0
+OR total_sale = 0;
+
 
 
 -- DATA ANALYSIS
 
--- 7. Average age of customer for a specific category ('Beauty')
+-- 8. Average age of customer for a specific category ('Beauty')
 SELECT category, ROUND(AVG(age), 2) AS AVG_AGE 
 FROM retail_sales 
 WHERE category LIKE 'Beauty';
 
--- 8. Total sales and total orders for each category
+-- 9. Total sales and total orders for each category
 SELECT category, SUM(total_sale) AS total_sales, COUNT(*) AS total_orders 
 FROM retail_sales 
 GROUP BY category;
 
--- 9. TOP 5 customers (based on total sales)
+-- 10. TOP 5 customers (based on total sales)
 SELECT customer_id, SUM(total_sale) AS total_sales 
 FROM retail_sales 
 GROUP BY customer_id 
 ORDER BY total_sales DESC 
 LIMIT 5;
 
--- 10. Number of transactions made by each gender for each category
+-- 11. Number of transactions made by each gender for each category
 SELECT category, gender, COUNT(gender) AS total_transactions 
 FROM retail_sales 
 GROUP BY category, gender;
 
--- 11. Number of orders by shift (using CTE)
+-- 12. Number of orders by shift (using CTE)
 WITH hourly_sale AS ( 
     SELECT *, 
         CASE 
@@ -2126,20 +2142,20 @@ SELECT shift, COUNT(*) AS total_orders
 FROM hourly_sale 
 GROUP BY shift;
 
--- 12. showing number of unique customers by category
+-- 13. showing number of unique customers by category
 SELECT category, COUNT(DISTINCT customer_id) AS unique_customer 
 FROM retail_sales 
 GROUP BY category;
 
--- 13. All transactions with total_sales > 1000
+-- 14. All transactions with total_sales > 1000
 SELECT * FROM retail_sales 
 WHERE total_sale > 1000;
 
--- 14. Orders made in a specific date
+-- 15. Orders made in a specific date
 SELECT * FROM retail_sales 
 WHERE sale_date = '2022-11-05';
 
--- 15. Orders in November 2022 for a specific category ('Clothing') and quantity >= 4
+-- 16. Orders in November 2022 for a specific category ('Clothing') and quantity >= 4
 SELECT * FROM `retail_sales` 
 WHERE sale_date > '2022-11-01' AND sale_date < '2022-11-30' 
 AND category LIKE 'Clothing' 
@@ -2147,7 +2163,7 @@ AND (quantity = 4 OR quantity > 4);
 
 -- ADVANCED ANALYSIS (Window Functions)
 
--- 16. Average sale for each month for each year (Window Function)
+-- 17. Average sale for each month for each year 
 SELECT sales_year, sales_month, average_sales, 
     RANK() OVER(PARTITION BY sales_year ORDER BY average_sales DESC) AS monthly_rank 
 FROM 
@@ -2159,7 +2175,7 @@ FROM
     GROUP BY YEAR(sale_date), MONTH(sale_date) 
     ) AS monthly_avg;
 
--- 17. Average sale for each month for each year with a specific rank (Highest Rank = 1)
+-- 18. Average sale for each month for each year with a specific rank (Highest Rank = 1)
 SELECT sales_year, sales_month, average_sales 
 FROM 
     (
