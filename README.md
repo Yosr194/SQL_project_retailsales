@@ -116,7 +116,7 @@ FROM retail_sales
 GROUP BY category, gender;
 ```
 
-**Query 5: Number of orders by shift (using CTE)**
+**Query 5: Number of orders by shift**
 ```sql
 WITH hourly_sale AS ( 
     SELECT *, 
@@ -159,7 +159,7 @@ AND category LIKE 'Clothing'
 AND (quantity = 4 OR quantity > 4);
 ```
 
-**Query 10: Average sale for each month for each year (Window Function)**
+**Query 10: Average sale for each month for each year**
 ```sql
 SELECT sales_year, sales_month, average_sales, 
     RANK() OVER(PARTITION BY sales_year ORDER BY average_sales DESC) AS monthly_rank 
@@ -198,10 +198,6 @@ WHERE monthly_rank = 1;
 - **Sales Trends:** Monthly analysis shows variations in sales, helping identify peak seasons.
 - **Customer Insights:** The analysis identifies the top-spending customers and the most popular product categories.
 
-## Reports
-- **Sales Summary:** A detailed report summarizing total sales, customer demographics, and category performance.
-- **Trend Analysis:** Insights into sales trends across different months and shifts.
-- **Customer Insights:** Reports on top customers and unique customer counts per category.
 
 ## Conclusion
 This project was a wonderful learning experience. It guided me through the full data analysis workflow, teaching me not only SQL syntax but also how to use it to find meaningful insights into customer behavior and product performance.
